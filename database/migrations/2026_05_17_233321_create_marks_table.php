@@ -1,0 +1,28 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('marks', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('enrollment_id')->constrained('student_enrollments')->cascadeOnDelete();
+            $table->foreignId('subject_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('sequence_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
+            $table->decimal('mark', 4, 2);
+            $table->timestamps();
+
+            $table->unique(['enrollment_id', 'subject_id', 'sequence_id']);
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('marks');
+    }
+};
