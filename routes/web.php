@@ -40,9 +40,12 @@ Route::middleware('auth')->group(function () {
             Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
             Route::resource('academic-years', \App\Http\Controllers\Admin\AcademicYearController::class);
             Route::resource('classrooms', \App\Http\Controllers\Admin\ClassroomController::class);
+            Route::post('subjects/import', [\App\Http\Controllers\Admin\SubjectController::class, 'import'])->name('subjects.import');
             Route::resource('subjects', \App\Http\Controllers\Admin\SubjectController::class);
+            Route::post('teachers/import', [\App\Http\Controllers\Admin\TeacherController::class, 'import'])->name('teachers.import');
             Route::resource('teachers', \App\Http\Controllers\Admin\TeacherController::class);
             Route::patch('teachers/{teacher}/toggle-active', [\App\Http\Controllers\Admin\TeacherController::class, 'toggleActive'])->name('teachers.toggle-active');
+            Route::post('students/import', [\App\Http\Controllers\Admin\StudentController::class, 'import'])->name('students.import');
             Route::resource('students', \App\Http\Controllers\Admin\StudentController::class);
             Route::get('teacher-assignments', [\App\Http\Controllers\Admin\TeacherAssignmentController::class, 'index'])->name('teacher-assignments.index');
             Route::get('teacher-assignments/create', [\App\Http\Controllers\Admin\TeacherAssignmentController::class, 'create'])->name('teacher-assignments.create');

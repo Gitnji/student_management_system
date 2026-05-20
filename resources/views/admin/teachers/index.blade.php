@@ -6,17 +6,46 @@
 @section('breadcrumb', 'Teachers')
 
 @section('content')
-    <div class="flex items-center justify-between mb-6">
-        <input type="text" id="teacher-search" placeholder="Search teachers..."
-               class="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-navy focus:outline-none focus:ring-2 focus:ring-royal w-56" />
+    @if($errors->any())
+        <div class="mb-6 bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">
+            {{ $errors->first() }}
+        </div>
+    @endif
 
-        <a href="{{ route('admin.teachers.create') }}"
-           class="inline-flex items-center gap-2 bg-royal hover:bg-blue-700 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
-            New Teacher
-        </a>
+    @if(session('import_errors'))
+        <div class="mb-6 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg px-4 py-3 text-sm">
+            <p class="font-medium mb-1">Skipped rows</p>
+            <ul class="list-disc list-inside space-y-1">
+                @foreach(session('import_errors') as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+        <input type="text" id="teacher-search" placeholder="Search teachers..."
+               class="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-navy focus:outline-none focus:ring-2 focus:ring-royal w-full lg:w-56" />
+
+        <div class="flex flex-col sm:flex-row gap-3">
+            <form method="POST" action="{{ route('admin.teachers.import') }}" enctype="multipart/form-data" class="flex items-center gap-2">
+                @csrf
+                <input type="file" name="import_file" accept=".csv,text/csv"
+                       class="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-navy focus:outline-none focus:ring-2 focus:ring-royal" />
+                <button type="submit"
+                        class="bg-white border border-gray-200 hover:border-royal text-navy text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
+                    Import CSV
+                </button>
+            </form>
+
+            <a href="{{ route('admin.teachers.create') }}"
+               class="inline-flex items-center justify-center gap-2 bg-royal hover:bg-blue-700 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                New Teacher
+            </a>
+        </div>
     </div>
 
     @if($teachers->isEmpty())

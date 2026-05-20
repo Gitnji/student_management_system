@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 
 class TeacherController extends Controller
@@ -46,6 +47,58 @@ class TeacherController extends Controller
 
         return redirect()->route('admin.teachers.index')
             ->with('success', 'Teacher account created successfully.');
+    }
+
+    public function import(Request $request)
+    {
+        $school = Auth::user()->school;
+
+        $request->validate([
+            'import_file' => ['required', 'file', 'mimes:csv,txt', 'max:2048'],
+        ]);
+
+        $created = 0;
+        $skipped = [];
+        $seenEmails = [];
+
+        foreach ($this->csvRows($request->file('import_file')->getRealPath()) as $line => $row) {
+            $row['email'] = strtolower($row['email'] ?? '');
+
+            $validator = Validator::make($row, [
+                'first_name' => ['required', 'string', 'max:100'],
+                'last_name'  => ['required', 'string', 'max:100'],
+                'email'      => ['required', 'email', 'max:255', 'unique:users,email'],
+                'password'   => ['required', Password::min(8)->letters()->numbers()],
+            ]);
+
+            if (isset($seenEmails[$row['email']])) {
+                $validator->after(fn($validator) => $validator->errors()->add('email', 'Duplicate email in import file.'));
+            }
+
+            if ($validator->fails()) {
+                $skipped[] = "Row {$line}: " . $validator->errors()->first();
+                continue;
+            }
+
+            $seenEmails[$row['email']] = true;
+
+            User::create([
+                'school_id'            => $school->id,
+                'first_name'           => $row['first_name'],
+                'last_name'            => $row['last_name'],
+                'email'                => $row['email'],
+                'password'             => $row['password'],
+                'role'                 => 'teacher',
+                'must_change_password' => true,
+                'is_active'            => true,
+            ]);
+
+            $created++;
+        }
+
+        return redirect()->route('admin.teachers.index')
+            ->with($created > 0 ? 'success' : 'error', "{$created} teacher(s) imported. " . count($skipped) . ' row(s) skipped.')
+            ->with('import_errors', $skipped);
     }
 
     public function edit(User $teacher)
@@ -107,5 +160,30 @@ class TeacherController extends Controller
         if ($teacher->school_id !== Auth::user()->school_id || $teacher->role !== 'teacher') {
             abort(403);
         }
+    }
+
+    private function csvRows(string $path): array
+    {
+        $handle = fopen($path, 'r');
+        $header = null;
+        $rows = [];
+
+        while (($data = fgetcsv($handle)) !== false) {
+            if ($data === [null] || $data === false) {
+                continue;
+            }
+
+            if ($header === null) {
+                $header = array_map(fn($value) => strtolower(trim((string) $value)), $data);
+                continue;
+            }
+
+            $data = array_pad($data, count($header), null);
+            $rows[] = [count($rows) + 2, array_combine($header, array_map(fn($value) => trim((string) $value), $data))];
+        }
+
+        fclose($handle);
+
+        return array_column($rows, 1, 0);
     }
 }

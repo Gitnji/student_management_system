@@ -9,7 +9,7 @@ class StreamSeeder extends Seeder
 {
     public function run(): void
     {
-        $streams = ['Science', 'Arts', 'Commercial', 'Technical'];
+        $streams = ['General', 'Science', 'Arts', 'Commercial', 'Technical'];
 
         foreach ($streams as $name) {
             Stream::firstOrCreate(['name' => $name]);

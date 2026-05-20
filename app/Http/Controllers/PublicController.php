@@ -46,6 +46,17 @@ class PublicController extends Controller
         return view('public.blog', compact('school', 'posts'));
     }
 
+    public function blogPost(string $slug)
+    {
+        $school = $this->school();
+        $post   = BlogPost::where('school_id', $school->id)
+            ->where('status', 'published')
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        return view('public.blog-post', compact('school', 'post'));
+    }
+
     public function events()
     {
         $school = $this->school();

@@ -8,6 +8,7 @@
     <meta property="og:title" content="@yield('og_title', 'Imperial Comprehensive College')">
     <meta property="og:description" content="@yield('meta_description', '')">
     <meta property="og:type" content="website">
+    @include('layouts.partials.favicon')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-white text-navy">

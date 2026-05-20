@@ -140,6 +140,8 @@ class ClassroomController extends Controller
 
     private function streams()
     {
+        Stream::firstOrCreate(['name' => 'General']);
+
         return Stream::orderBy('name')->get();
     }
 }
