@@ -12,30 +12,74 @@ class HomepageSeeder extends Seeder
     {
         $school = School::first();
 
-        Page::firstOrCreate(
+        Page::updateOrCreate(
             ['slug' => 'home'],
             [
                 'school_id' => $school->id,
                 'title'     => 'Home',
                 'content'   => [
                     'hero' => [
-                        'heading'  => 'Excellence in Education',
-                        'subtext'  => 'Nurturing tomorrow\'s leaders through knowledge, discipline, and excellence.',
-                        'cta_text' => 'Learn More',
-                        'cta_link' => '#about',
+                        'heading'  => 'A Pinnacle of Excellence in Education',
+                        'subtext'  => 'ICC NITOP III Mankon — delivering the best GCE results in General and Technical Education for both Ordinary, Intermediate and Advanced Level over the past five years.',
+                        'cta_text' => 'Enroll Today',
+                        'cta_link' => '#programs',
                     ],
                     'about' => [
-                        'text' => 'Imperial Comprehensive College is a leading secondary school in the North-West Region of Cameroon, committed to academic excellence and holistic student development.',
+                        'text' => 'Imperial Comprehensive College (ICC NITOP III) is located at Azire Old Church, Mankon, Bamenda. We are committed to academic excellence and holistic student development, with 70% of our teachers being certified GCE Examiners. Our campus features a Computer Lab, Science Lab, Home Economics Lab, and a football field. We also run a Special Multi-Purpose Evening School from 3pm every working day.',
                     ],
                     'stats' => [
-                        ['label' => 'Students', 'value' => '1,200+'],
-                        ['label' => 'Teachers', 'value' => '80+'],
-                        ['label' => 'Years of Excellence', 'value' => '25+'],
-                        ['label' => 'Pass Rate', 'value' => '95%'],
+                        ['label' => 'GCE Pass Rate',      'value' => '95%+'],
+                        ['label' => 'GCE Examiner Staff', 'value' => '70%'],
+                        ['label' => 'Programs Offered',   'value' => '4'],
+                        ['label' => 'Years of Excellence','value' => '5+'],
+                    ],
+                    'programs' => [
+                        [
+                            'name'  => 'Sciences',
+                            'range' => 'Form 1 – Upper 6',
+                            'fee'   => '65,000 XAF',
+                            'icon'  => 'science',
+                        ],
+                        [
+                            'name'  => 'Arts',
+                            'range' => 'Form 1 – Upper 6',
+                            'fee'   => '65,000 XAF',
+                            'icon'  => 'arts',
+                        ],
+                        [
+                            'name'  => 'Technical Commercial',
+                            'range' => 'Form 1 – Upper 6',
+                            'fee'   => '65,000 XAF',
+                            'icon'  => 'commercial',
+                        ],
+                        [
+                            'name'  => 'Technical Industrial',
+                            'range' => 'Form 1 – Upper 6',
+                            'fee'   => '70,000 XAF',
+                            'icon'  => 'industrial',
+                        ],
+                    ],
+                    'facilities' => [
+                        'Computer Lab',
+                        'Science Lab',
+                        'Home Economics Lab',
+                        'Football Field',
+                        'Evening School (3pm daily)',
+                    ],
+                    'contact' => [
+                        'phones' => [
+                            '+237 677 345 785',
+                            '+237 677 123 626',
+                            '+237 654 209 673',
+                            '+237 672 419 190',
+                            '+237 673 013 421',
+                        ],
+                        'address' => 'Azire Old Church, Mankon, Bamenda',
+                        'hours'   => 'Tuesday – Friday, Working Hours',
                     ],
                 ],
-                'meta_title'       => 'Imperial Comprehensive College — Bamenda',
-                'meta_description' => 'Imperial Comprehensive College is a leading secondary school in Bamenda, Cameroon.',
+                'meta_title'       => 'Imperial Comprehensive College — ICC NITOP III Mankon, Bamenda',
+                'meta_description' => 'ICC NITOP III Mankon offers Sciences, Arts, Technical Commercial and Technical Industrial programs from Form 1 to Upper 6. Best GCE results in Bamenda.',
             ]
         );
     }

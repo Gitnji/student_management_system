@@ -80,6 +80,7 @@ class BlogController extends Controller
     {
         $this->authorizePost($blog);
         $blog->delete();
+
         return redirect()->route('admin.cms.blog.index')
             ->with('success', 'Post deleted.');
     }

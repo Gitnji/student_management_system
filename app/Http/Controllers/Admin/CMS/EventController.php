@@ -71,6 +71,7 @@ class EventController extends Controller
     {
         $this->authorizeEvent($event);
         $event->delete();
+
         return redirect()->route('admin.cms.events.index')
             ->with('success', 'Event deleted.');
     }

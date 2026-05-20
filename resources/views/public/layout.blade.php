@@ -90,12 +90,16 @@
                     </div>
                 </div>
                 <div>
-                    <h4 class="text-white font-semibold mb-3 text-sm">Contact</h4>
-                    <div class="text-xs space-y-1">
-                        <p>Tel: +237 670 100 200</p>
-                        <p>contact@icc.edu.cm</p>
-                    </div>
-                </div>
+    <h4 class="text-white font-semibold mb-3 text-sm">Contact</h4>
+    <div class="text-xs space-y-1">
+        <p>📍 Azire Old Church, Mankon, Bamenda</p>
+        <p>Tel: +237 677 345 785</p>
+        <p>Tel: +237 677 123 626</p>
+        <p>Tel: +237 654 209 673</p>
+        <p>contact@icc.edu.cm</p>
+        <p class="text-white/40 mt-2">Reg: Tue – Fri, Working Hours</p>
+    </div>
+</div>
             </div>
             <div class="border-t border-white/10 pt-6 text-xs text-center">
                 &copy; {{ date('Y') }} Imperial Comprehensive College. All rights reserved.

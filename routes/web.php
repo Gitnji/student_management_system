@@ -21,11 +21,9 @@ Route::get('/blog/{slug}', [\App\Http\Controllers\PublicController::class, 'blog
 Route::get('/events', [\App\Http\Controllers\PublicController::class, 'events'])->name('public.events');
 Route::get('/gallery', [\App\Http\Controllers\PublicController::class, 'gallery'])->name('public.gallery');
 
-// Guest only
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
-});
+// Login available regardless of session state
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
 
 // Authenticated
 Route::middleware('auth')->group(function () {

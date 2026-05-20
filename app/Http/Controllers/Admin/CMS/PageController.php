@@ -96,6 +96,7 @@ class PageController extends Controller
     {
         $this->authorizePage($page);
         $page->delete();
+
         return redirect()->route('admin.cms.pages.index')
             ->with('success', 'Page deleted.');
     }

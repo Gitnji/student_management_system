@@ -47,6 +47,7 @@ class GalleryController extends Controller
         if ($photo->school_id !== Auth::user()->school_id) abort(403);
         Storage::disk('public')->delete($photo->image_path);
         $photo->delete();
+
         return back()->with('success', 'Photo deleted.');
     }
 
@@ -77,6 +78,8 @@ class GalleryController extends Controller
     {
         if ($video->school_id !== Auth::user()->school_id) abort(403);
         $video->delete();
+
         return back()->with('success', 'Video removed.');
     }
+
 }
