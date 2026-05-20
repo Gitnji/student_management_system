@@ -13,7 +13,8 @@ class DatabaseSeeder extends Seeder
     StreamSeeder::class,
     SchoolSeeder::class,
     TestDataSeeder::class,
-]);
+    HomepageSeeder::class,
+    ]);
     }
 
 }

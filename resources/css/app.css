@@ -6,3 +6,8 @@
     --color-sky-custom: #38BDF8;
     --color-light-gray: #F1F5F9;
 }
+@media print {
+    nav, aside, header, button, .no-print { display: none !important; }
+    body { background: white !important; }
+    main { padding: 0 !important; }
+}

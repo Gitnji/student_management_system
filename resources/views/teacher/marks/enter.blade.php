@@ -109,4 +109,27 @@
             @endif
         </form>
     </div>
+    @push('scripts')
+<script>
+    // Tab through mark inputs sequentially
+    const inputs = Array.from(document.querySelectorAll('input[type="number"][name^="marks"]'));
+
+    inputs.forEach((input, index) => {
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === 'Tab') {
+                e.preventDefault();
+                const next = inputs[index + 1];
+                if (next) next.focus();
+            }
+        });
+    });
+
+    // Auto-select value on focus for quick overwrite
+    inputs.forEach(input => {
+        input.addEventListener('focus', function () {
+            this.select();
+        });
+    });
+</script>
+@endpush
 @endsection

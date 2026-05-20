@@ -3,6 +3,24 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/sitemap.xml', function () {
+    $school = \App\Models\School::first();
+    $posts  = \App\Models\BlogPost::where('school_id', $school->id)
+        ->where('status', 'published')
+        ->get(['slug', 'updated_at']);
+
+    $content = view('sitemap', compact('posts'))->render();
+
+    return response($content, 200)->header('Content-Type', 'application/xml');
+});
+
+// Public website
+Route::get('/', [\App\Http\Controllers\PublicController::class, 'home'])->name('public.home');
+Route::get('/blog', [\App\Http\Controllers\PublicController::class, 'blog'])->name('public.blog');
+Route::get('/blog/{slug}', [\App\Http\Controllers\PublicController::class, 'blogPost'])->name('public.blog.post');
+Route::get('/events', [\App\Http\Controllers\PublicController::class, 'events'])->name('public.events');
+Route::get('/gallery', [\App\Http\Controllers\PublicController::class, 'gallery'])->name('public.gallery');
+
 // Guest only
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -21,7 +39,7 @@ Route::middleware('auth')->group(function () {
         ->prefix('admin')
         ->name('admin.')
         ->group(function () {
-            Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
+            Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
             Route::resource('academic-years', \App\Http\Controllers\Admin\AcademicYearController::class);
             Route::resource('classrooms', \App\Http\Controllers\Admin\ClassroomController::class);
             Route::resource('subjects', \App\Http\Controllers\Admin\SubjectController::class);
@@ -46,6 +64,20 @@ Route::middleware('auth')->group(function () {
             Route::post('promotions/compute', [\App\Http\Controllers\Admin\PromotionController::class, 'compute'])->name('promotions.compute');
             Route::patch('promotions/{promotion}/decision', [\App\Http\Controllers\Admin\PromotionController::class, 'updateDecision'])->name('promotions.update-decision');
             Route::post('promotions/confirm', [\App\Http\Controllers\Admin\PromotionController::class, 'confirm'])->name('promotions.confirm');
+
+
+
+            // CMS
+           Route::prefix('cms')->name('cms.')->group(function () {
+           Route::resource('pages', \App\Http\Controllers\Admin\CMS\PageController::class);
+           Route::resource('blog', \App\Http\Controllers\Admin\CMS\BlogController::class);
+           Route::resource('events', \App\Http\Controllers\Admin\CMS\EventController::class);
+           Route::get('gallery', [\App\Http\Controllers\Admin\CMS\GalleryController::class, 'index'])->name('gallery.index');
+           Route::post('gallery/photos', [\App\Http\Controllers\Admin\CMS\GalleryController::class, 'storePhoto'])->name('gallery.photos.store');
+           Route::delete('gallery/photos/{photo}', [\App\Http\Controllers\Admin\CMS\GalleryController::class, 'destroyPhoto'])->name('gallery.photos.destroy');
+           Route::post('gallery/videos', [\App\Http\Controllers\Admin\CMS\GalleryController::class, 'storeVideo'])->name('gallery.videos.store');
+           Route::delete('gallery/videos/{video}', [\App\Http\Controllers\Admin\CMS\GalleryController::class, 'destroyVideo'])->name('gallery.videos.destroy');
+          });
         });
 
     // Teacher
@@ -53,12 +85,11 @@ Route::middleware('auth')->group(function () {
         ->prefix('teacher')
         ->name('teacher.')
         ->group(function () {
-            Route::get('/dashboard', fn() => view('teacher.dashboard'))->name('dashboard');
+            Route::get('/dashboard', [\App\Http\Controllers\Teacher\DashboardController::class, 'index'])->name('dashboard');
             Route::get('/marks', [\App\Http\Controllers\Teacher\MarkController::class, 'index'])->name('marks.index');
             Route::get('/marks/enter', [\App\Http\Controllers\Teacher\MarkController::class, 'enter'])->name('marks.enter');
             Route::post('/marks/save', [\App\Http\Controllers\Teacher\MarkController::class, 'save'])->name('marks.save');
+            Route::get('/classes', [\App\Http\Controllers\Teacher\ClassController::class, 'index'])->name('classes.index');
+            Route::get('/classes/{classroom}', [\App\Http\Controllers\Teacher\ClassController::class, 'show'])->name('classes.show');
         });
 });
-
-// Root redirect
-Route::get('/', fn() => redirect()->route('login'));

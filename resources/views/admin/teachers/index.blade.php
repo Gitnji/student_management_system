@@ -6,7 +6,10 @@
 @section('breadcrumb', 'Teachers')
 
 @section('content')
-    <div class="flex justify-end mb-6">
+    <div class="flex items-center justify-between mb-6">
+        <input type="text" id="teacher-search" placeholder="Search teachers..."
+               class="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-navy focus:outline-none focus:ring-2 focus:ring-royal w-56" />
+
         <a href="{{ route('admin.teachers.create') }}"
            class="inline-flex items-center gap-2 bg-royal hover:bg-blue-700 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -22,7 +25,7 @@
         </div>
     @else
         <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-            <table class="w-full text-sm">
+            <table class="w-full text-sm" id="teachers-table">
                 <thead>
                     <tr class="border-b border-gray-100 bg-light-gray">
                         <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">Name</th>

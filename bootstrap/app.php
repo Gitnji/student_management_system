@@ -14,8 +14,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role'                 => \App\Http\Middleware\RoleMiddleware::class,
             'must.change.password' => \App\Http\Middleware\MustChangePassword::class,
+            'active'               => \App\Http\Middleware\EnsureUserIsActive::class,
         ]);
+
+        // Apply active check to all authenticated routes
+        $middleware->appendToGroup('web', \App\Http\Middleware\EnsureUserIsActive::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
+    

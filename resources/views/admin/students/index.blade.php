@@ -16,6 +16,9 @@
                     </option>
                 @endforeach
             </select>
+
+            <input type="text" id="student-search" placeholder="Search students..."
+                   class="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-navy focus:outline-none focus:ring-2 focus:ring-royal w-56" />
         </form>
 
         <a href="{{ route('admin.students.create') }}"
@@ -33,7 +36,7 @@
         </div>
     @else
         <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-            <table class="w-full text-sm">
+            <table class="w-full text-sm" id="students-table">
                 <thead>
                     <tr class="border-b border-gray-100 bg-light-gray">
                         <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">Student</th>
