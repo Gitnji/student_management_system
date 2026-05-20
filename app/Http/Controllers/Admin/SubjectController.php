@@ -9,7 +9,6 @@ use App\Models\Subject;
 use App\Models\SubjectCoefficient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 
 class SubjectController extends Controller
 {
@@ -26,8 +25,8 @@ class SubjectController extends Controller
 
     public function create()
     {
-        $classLevels = Cache::get('class_levels');
-        $streams     = Cache::get('streams');
+        $classLevels = $this->classLevels();
+        $streams     = $this->streams();
 
         return view('admin.subjects.create', compact('classLevels', 'streams'));
     }
@@ -68,9 +67,8 @@ class SubjectController extends Controller
     public function edit(Subject $subject)
     {
         $this->authorizeSubject($subject);
-
-        $classLevels  = Cache::get('class_levels');
-        $streams      = Cache::get('streams');
+        $classLevels  = $this->classLevels();
+        $streams      = $this->streams();
         $coefficients = SubjectCoefficient::where('subject_id', $subject->id)->get()
             ->groupBy('class_level_id')
             ->map(fn($rows) => $rows->keyBy('stream_id'));
@@ -131,5 +129,15 @@ class SubjectController extends Controller
         if ($subject->school_id !== Auth::user()->school_id) {
             abort(403);
         }
+    }
+
+    private function classLevels()
+    {
+        return ClassLevel::orderBy('order')->orderBy('name')->get();
+    }
+
+    private function streams()
+    {
+        return Stream::orderBy('name')->get();
     }
 }

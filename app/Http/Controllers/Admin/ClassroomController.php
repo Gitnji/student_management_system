@@ -10,7 +10,6 @@ use App\Models\Stream;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 
 class ClassroomController extends Controller
 {
@@ -36,8 +35,8 @@ class ClassroomController extends Controller
     {
         $school        = Auth::user()->school;
         $academicYears = AcademicYear::where('school_id', $school->id)->where('is_closed', false)->orderByDesc('start_date')->get();
-        $classLevels   = Cache::get('class_levels');
-        $streams       = Cache::get('streams');
+        $classLevels   = $this->classLevels();
+        $streams       = $this->streams();
         $teachers      = User::where('school_id', $school->id)->where('role', 'teacher')->where('is_active', true)->orderBy('first_name')->get();
 
         return view('admin.classrooms.create', compact('academicYears', 'classLevels', 'streams', 'teachers'));
@@ -85,8 +84,8 @@ class ClassroomController extends Controller
 
         $school        = Auth::user()->school;
         $academicYears = AcademicYear::where('school_id', $school->id)->where('is_closed', false)->orderByDesc('start_date')->get();
-        $classLevels   = Cache::get('class_levels');
-        $streams       = Cache::get('streams');
+        $classLevels   = $this->classLevels();
+        $streams       = $this->streams();
         $teachers      = User::where('school_id', $school->id)->where('role', 'teacher')->where('is_active', true)->orderBy('first_name')->get();
 
         return view('admin.classrooms.edit', compact('classroom', 'academicYears', 'classLevels', 'streams', 'teachers'));
@@ -132,5 +131,15 @@ class ClassroomController extends Controller
         if ($classroom->school_id !== Auth::user()->school_id) {
             abort(403);
         }
+    }
+
+    private function classLevels()
+    {
+        return ClassLevel::orderBy('order')->orderBy('name')->get();
+    }
+
+    private function streams()
+    {
+        return Stream::orderBy('name')->get();
     }
 }
