@@ -23,4 +23,12 @@ class Page extends Model
     {
         return $this->belongsTo(School::class);
     }
+
+    // App/Models/Page.php
+public function updateContent(array $newData): void
+{
+    $current = $this->content ?? [];
+    $this->content = array_merge_recursive($current, $newData);
+    $this->save();
+}
 }
