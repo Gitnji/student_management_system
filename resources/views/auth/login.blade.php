@@ -83,6 +83,7 @@
                 >
                     Sign in
                 </button>
+                 <a href="{{ route('public.home') }}" class="text-royal hover:text-blue-700 text-sm">Back to Home</a>
             </form>
         </div>
 

@@ -11,3 +11,7 @@
     body { background: white !important; }
     main { padding: 0 !important; }
 }
+.prose h1, .prose h2, .prose h3 {
+    margin-top: 2.5em;
+    margin-bottom: 1em;
+}
